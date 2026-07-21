@@ -5,6 +5,8 @@ description: Generate a client's ITR filing guide and optionally drive a verifie
 
 # File a client's ITR
 
+> **EXPERIMENTAL for outside adopters.** This skill assists a REAL tax filing on incometax.gov.in. It is exercised inside the practice that built it, under its human-in-the-loop rules; nothing here has been hardened for other setups. If you cloned this repo: do not use the assisted-browser mode at all until you have read every hard-stop rule below, and never let it near a real return unless `bun run verify` is green and a qualified professional has reviewed the statement. The guide + portal-offline-JSON-upload path needs no browser automation and is the recommended way to file.
+
 Three modes: **guide** (always run first), **JSON-upload filing** (preferred when a prior-year filed JSON exists), and **assisted browser filing** (only when asked). In every mode the operator owns login, OTP, captcha, the final Submit, and e-verification.
 
 ## Preconditions

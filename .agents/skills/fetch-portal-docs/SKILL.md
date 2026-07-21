@@ -5,6 +5,8 @@ description: Drive the operator's logged-in browser session to download a client
 
 # Fetch a client's portal documents
 
+> **EXPERIMENTAL for outside adopters.** This skill drives a live, logged-in session on incometax.gov.in. It is exercised routinely inside the practice that built it, but it is calibrated to that practice's setup (dedicated Chrome profile, CDP attach on port 9992, human-in-the-loop rules in AGENTS.md "Portal browser sessions"). If you cloned this repo: do not enable it until you have read this whole file plus those rules, and tested against your own account. You do not need it - the manual-download path (`bun run harvest --sweep`) covers the gather phase with no browser automation at all.
+
 Automates the gather phase: prefill JSON + AIS (PDF and JSON) + TIS + 26AS from incometax.gov.in, then renamed and filed into `clients/<slug>/`. There is no public API (programmatic access needs ERI registration - not this practice), so the gather is browser-based and login/OTP is always the operator's step.
 
 ## Zero-token path first (preferred - this is how the practice runs now)
