@@ -1,0 +1,108 @@
+Taxpayer Information Summary (TIS)                                                                                                Financial Year             2025-26
+
+
+General Information
+
+
+Permanent Account Number (PAN)                          Aadhaar Number                                           Name of Assessee
+ABCPX1234Z                                              XXXX XXXX 9999                                           TEST TAXPAYER
+
+
+Date of Birth                                           Mobile Number                                            E-mail Address
+01/01/1970                                              9999999999                                               TEST@EXAMPLE.COM
+
+
+Address
+1, TEST LANE, TESTVILLE, 400001, MAHARASHTRA
+
+-------------------------------------------------------------------- Taxpayer Information Summary (TIS) --------------------------------------------------------------------
+                                                                      (All amount values are in INR)
+
+
+
+
+ SR. NO.    INFORMATION CATEGORY                                                                                               PROCESSED BY                ACCEPTED BY
+                                                                                                                                    SYSTEM                   TAXPAYER/
+                                                                                                                                                          CONFIRMED BY
+                                                                                                                                                                SOURCE
+ 1          Dividend                                                                                                                     12,000                     12,000
+ 2          Interest from savings bank                                                                                                    1,500                      1,500
+ 3          Business receipts                                                                                                          1,00,000                   1,00,000
+ 4          Lease of biofuel plant                                                                                                       50,000                     50,000
+
+
+
+The information details under each information category is provided on next page.
+
+
+     Reported by Source - Value as reported by the information source
+     Processed by System - Value after processing (including deduplication of information) based on pre-defined rules
+     Accepted by Taxpayer/ Confirmed by Source - Value derived after considering the taxpayer's feedback
+
+
+Download ID : ABCPX1234Z202607011000                             IP Address :
+
+Generation Date : 01/07/2026, 10:00:00                                                                                                                   Page 1 of 2
+                   PAN                                                          Name                                                        Financial Year
+             ABCPX1234Z                                                    TEST TAXPAYER                                                       2025-26
+
+
+
+
+ ----------------------------------------------------------- Annexure to Taxpayer Information Summary (TIS) -----------------------------------------------------------
+
+
+
+ SR. NO.    INFORMATION CATEGORY                                                                                            PROCESSED BY                ACCEPTED BY
+                                                                                                                                 SYSTEM                   TAXPAYER/
+                                                                                                                                                       CONFIRMED BY
+                                                                                                                                                             SOURCE
+ 1          Dividend                                                                                                                 12,000                     12,000
+ SR. NO.    PART       INFORMATION            INFORMATION SOURCE                            AMOUNT               REPORTED         PROCESSED             ACCEPTED BY
+                       DESCRIPTION                                                          DESCRIPTION         BY SOURCE         BY SYSTEM               TAXPAYER/
+                                                                                                                                                       CONFIRMED BY
+                                                                                                                                                             SOURCE
+ 1          SFT        Dividend income        ALPHA INDUSTRIES LIMITED                      Total Dividend           10,000             10,000                  10,000
+                       (SFT-015)              (AAACA0000A.AZ001)                            amount
+ 2          TDS/       Dividend received      ALPHA INDUSTRIES LIMITED (MUMA11111A)         Amount paid/             10,000                     -                     -
+            TCS        (Section 194)                                                        credited
+ 3          SFT        Dividend on units of   Registrar Services Limited - BETA Asset       Total Dividend            2,000              2,000                   2,000
+                       mutual fund            Management Company Limited(G)                 amount
+                       (SFT-018)              (AAACC0000C.AZ002)
+
+
+
+
+ SR. NO.    INFORMATION CATEGORY                                                                                            PROCESSED BY                ACCEPTED BY
+                                                                                                                                 SYSTEM                   TAXPAYER/
+                                                                                                                                                       CONFIRMED BY
+                                                                                                                                                             SOURCE
+ 2          Interest from savings bank                                                                                                1,500                      1,500
+ SR. NO.    PART    INFORMATION               INFORMATION SOURCE                 AMOUNT                REPORTED BY        PROCESSED BY                 ACCEPTED BY
+                    DESCRIPTION                                                  DESCRIPTION               SOURCE              SYSTEM          TAXPAYER/ CONFIRMED
+                                                                                                                                                          BY SOURCE
+ 1          SFT     Interest income           GAMMA BANK LIMITED                 Interest                       1,500               1,500                        1,500
+                    (SFT-016) – Savings       (AABCG0000G.AB001)
+
+
+
+
+ SR. NO.   INFORMATION CATEGORY                                                                                     PROCESSED BY               ACCEPTED BY
+                                                                                                                         SYSTEM                  TAXPAYER/
+                                                                                                                                              CONFIRMED BY
+                                                                                                                                                    SOURCE
+ 3         Business receipts                                                                                             1,00,000                    1,00,000
+ SR. NO.   PART     INFORMATION                     INFORMATION SOURCE            AMOUNT              REPORTED        PROCESSED                ACCEPTED BY
+                    DESCRIPTION                                                   DESCRIPTION        BY SOURCE        BY SYSTEM                  TAXPAYER/
+                                                                                                                                              CONFIRMED BY
+                                                                                                                                                    SOURCE
+ 1         TDS/     Receipt of fees for             DELTA CONSULTING              Amount paid/          1,00,000         1,00,000                    1,00,000
+           TCS      professional or technical       PRIVATE LIMITED               credited
+                    services (Section 194J)         (MUMD33333D)
+
+
+
+
+Download ID : ABCPX1234Z202607011000                         IP Address :
+
+Generation Date : 01/07/2026, 10:00:00                                                                                                       Page 2 of 2

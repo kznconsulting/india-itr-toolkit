@@ -1,0 +1,23 @@
+{
+  "name": "india-itr-toolkit",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "process": "bun scripts/process-itr.ts",
+    "extract": "bun scripts/extract-data.ts",
+    "harvest": "bun scripts/harvest-portal.ts",
+    "statement": "python3 scripts/build-statement.py",
+    "parse-cg": "python3 scripts/parse-ais-cg.py",
+    "parse-intimation": "bun scripts/parse-intimation.ts",
+    "guide": "bun scripts/filing-guide.ts",
+    "generate": "python3 scripts/generate-itr.py",
+    "verify": "bun scripts/verify-return.ts",
+    "check": "python3 scripts/check-rules.py",
+    "prefill": "python3 scripts/compare-prefill.py",
+    "status": "bun scripts/status.ts",
+    "tax": "bun scripts/tax-cli.ts",
+    "doctor": "bash scripts/doctor.sh",
+    "test": "bun test"
+  }
+}

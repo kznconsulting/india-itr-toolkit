@@ -1,0 +1,24 @@
+Annual Information Statement (AIS) - FICTITIOUS SAMPLE for scripts/parse-ais-cg.py
+AAAPZ8888Z  DEMO KUMAR SHARMA  2025-26
+SFT-17 Sale of securities and units of mutual fund
+This file reproduces the multi-line column-wrap variants seen in a real 549-lot AIS
+(gap ledger: "AIS SFT-17 parser fails on a real large capital-gains table").
+SR. NO.  DATE OF SALE/  SECURITY  DEBIT TYPE  CREDIT TYPE  SHORT/LONG TERM  QUANTITY  PRICE PER UNIT  SALE  PURCHASE COST
+NO.  TRANSFER
+VALUE
+                                                        Listed                            Off         Short
+   1   20/11/2025   SAMPLE INSURANCE COMPANY LIMITED     Equity Share    Market   market    term    25.00    720.00    18,000    12,000    0    0    0    Active
+   SAMPLE LONG INFRASTRUCTURE DEVELOPMENT FINANCE COMPANY LIMITED    Listed
+   2   12/09/2025   Equity Share   Market   Market   Long   term   100.00   2,500.00   2,50,000   1,10,000   0   0   0   Active
+   3   05/01/2026   SAMPLE INDUSTRIES LIMITED EQ   Listed Equity   Market   Market   Long   50.00   3,000.00   1,50,000   70,000   0   0   0   Active
+       NEW FV RS. 2/-(INE000000AA2) Share
+Page 1 of 2
+Download ID: AIS0000000  Generation Date: 15/06/2026  IP Address: 0.0.0.0
+                                                        Listed                            Off         Long
+   4   14/02/2026   SAMPLE TRANSFER-IN LIMITED           Equity Share    Market   market    term    10.00    900.00    9,000    0    0    0    0    Active
+   5   14/02/2026   SAMPLE BOND SERIES IX   Listed Debenture   Market   Market   Long   5.00   1,000.00   5,000   4,000   0   0   0   Active
+       (INE000000AA5) Others
+                             SAMPLE SOLAR COMPANY LIMITED EQ NEW FV RS. 2/-              Listed                            Short
+   6   05/03/2026            (INE000000AA6)                                              Equity Share Market     Market    term              2.00   14,934.00    29,868     26,600.00    0    0    0    Active
+                             SAMPLE SOLAR COMPANY LIMITED EQ NEW FV RS. 2/-              Listed                            Short
+   7   05/03/2026            (INE000000AA6)                                              Equity Share Market     Market    term              4.00   14,934.00    59,736     58,050.00    0    0    0    Active

@@ -1,0 +1,29 @@
+PAN        : ABCPX1234Z                |      AY     : 2025-26                |     Ack. No.      : 123456789012345                 |       DIN    : CPC/2526/A1/999999999
+
+
+
+
+                                    You have a Refund for A.Y. 2025-26
+
+                          * Amount of Refund :            ` 52,110                     Refund Sequence No :                1234567890
+
+
+                                                    COMPUTATION OF INCOME
+
+ 11                                    Gross total income (including special income) [11=(9-10)]                                       5,00,000                5,00,000
+ 15                                    Total income [11-13(c)-14]                                                                      5,00,000                5,00,100
+ 18                                    Aggregate income [18=(15-16+17)]                                                                5,00,000                5,00,100
+               TAX PAYABLE ON TOTAL
+ 22                   INCOME           (a) Tax at normal rates on 18 above                                                              10,000                  10,000
+                                       (d) Tax Payable on Total Income (22a+22b-22c)                                                    10,000                  10,000
+                                       (e) Rebate u/s 87A                                                                               10,000                  10,000
+                                             (e) Total Taxes Paid [30e=(30a+30b+30c+30d)]                                                  50,500                  50,500
+ 31                     REFUND               Refund amount [31=(30e-29)]                                                                   50,500                  50,500
+ 32                                          Delay attributable to Taxpayer (in months)                                                          N/A                     0
+ 33                                          Interest u/s 244A on refund (on item 31 above after considering item 32)                            N/A                 1,610
+                                             TDS deducted on interest paid u/s 244A (on item 33 above and for
+ 34                                          NON-RESIDENT only)                                                                                  N/A                     0
+ 35                                          Total income tax refund [35=(31+33-34)]                                                             N/A               52,110
+               Less: Amount of refund adjusted against demand(s) of earlier AY(s) and interest payable under section
+ 36            220(2) after following due process under section 245(1).                                                                                                  0
+ 37            Net Amount Refundable 37=(35-36)                                                                                                                    52,110

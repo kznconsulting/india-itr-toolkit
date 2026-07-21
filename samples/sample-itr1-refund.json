@@ -1,0 +1,110 @@
+{
+  "_comment": "FICTITIOUS test data: same income as sample-itr1 but with excess TDS, so a refund is due. Not a real person or return.",
+  "ITR": {
+    "ITR1": {
+      "CreationInfo": {
+        "SWVersionNo": "1.0",
+        "SWCreatedBy": "SW00000000",
+        "JSONCreatedBy": "SW00000000",
+        "JSONCreationDate": "2026-07-12",
+        "IntermediaryCity": "Delhi",
+        "Digest": "-"
+      },
+      "Form_ITR1": {
+        "FormName": "ITR-1",
+        "Description": "For individuals being a resident (other than not ordinarily resident) having total income upto Rs.50 lakh",
+        "AssessmentYear": "2026",
+        "SchemaVer": "Ver1.0",
+        "FormVer": "Ver1.0"
+      },
+      "PersonalInfo": {
+        "AssesseeName": { "FirstName": "Demo", "SurNameOrOrgName": "Refundcase" },
+        "PAN": "AAAPX8888X",
+        "DOB": "1990-11-02",
+        "EmployerCategory": "OTH",
+        "Address": {
+          "ResidenceNo": "2",
+          "LocalityOrArea": "Sample Nagar",
+          "CityOrTownOrDistrict": "Pune",
+          "StateCode": "16",
+          "CountryCode": "91",
+          "PinCode": 411001,
+          "CountryCodeMobile": 91,
+          "MobileNo": 9999999998,
+          "EmailAddress": "demo@example.com"
+        }
+      },
+      "FilingStatus": {
+        "ReturnFileSec": 11,
+        "OptOutNewTaxRegime": "N",
+        "SeventhProvisio139": "N"
+      },
+      "ITR1_IncomeDeductions": {
+        "GrossSalary": 1600000,
+        "Salary": 1600000,
+        "PerquisitesValue": 0,
+        "ProfitsInSalary": 0,
+        "NetSalary": 1600000,
+        "DeductionUs16": 75000,
+        "StandardDeduction": 75000,
+        "EntertainmentAlw": 0,
+        "ProfessionalTax": 0,
+        "IncomeFromSal": 1525000,
+        "TotalIncomeOfHP": 0,
+        "IncomeOthSrc": 40000,
+        "GrossTotIncome": 1565000,
+        "UsrDeductUndChapVIA": { "TotalChapVIADeductions": 0 },
+        "DeductUndChapVIA": { "TotalChapVIADeductions": 0 },
+        "TotalIncome": 1565000
+      },
+      "ITR1_TaxComputation": {
+        "TotalTaxPayable": 114750,
+        "Rebate87A": 0,
+        "TaxPayableOnRebate": 114750,
+        "EducationCess": 4590,
+        "GrossTaxLiability": 119340,
+        "Section89": 0,
+        "NetTaxLiability": 119340,
+        "TotalIntrstPay": 0,
+        "IntrstPay": {
+          "IntrstPayUs234A": 0,
+          "IntrstPayUs234B": 0,
+          "IntrstPayUs234C": 0
+        },
+        "LateFilingFee234F": 0,
+        "TotTaxPlusIntrstPay": 119340
+      },
+      "TaxPaid": {
+        "TaxesPaid": {
+          "AdvanceTax": 0,
+          "TDS": 130000,
+          "TCS": 0,
+          "SelfAssessmentTax": 0,
+          "TotalTaxesPaid": 130000
+        },
+        "BalTaxPayable": 0
+      },
+      "Refund": {
+        "RefundDue": 10660,
+        "BankAccountDtls": {
+          "AddtnlBankDetails": [
+            {
+              "IFSCCode": "TEST0000002",
+              "BankName": "Sample Bank",
+              "BankAccountNo": "000000000001",
+              "UseForRefund": "true"
+            }
+          ]
+        }
+      },
+      "Verification": {
+        "Declaration": {
+          "AssesseeVerName": "DEMO REFUNDCASE",
+          "FatherName": "SAMPLE FATHER",
+          "AssesseeVerPAN": "AAAPX8888X"
+        },
+        "Capacity": "S"
+      }
+    }
+  }
+}

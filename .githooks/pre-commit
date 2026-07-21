@@ -1,0 +1,15 @@
+#!/bin/bash
+# PII guard: blocks commits that touch client data or machine-local secrets,
+# even when force-added or after a .gitignore edit. Enabled per-machine via
+# `git config core.hooksPath .githooks` (bun run doctor sets this automatically).
+# A path blocked here must never enter git history - see "Data sensitivity" in
+# AGENTS.md. Never bypass with --no-verify; unstage the file instead.
+blocked='^(clients/|reports/|\.claude/settings\.local\.json|\.env)'
+bad=$(git diff --cached --name-only | grep -E "$blocked" | grep -v '^clients/\.gitkeep$')
+if [ -n "$bad" ]; then
+  echo "BLOCKED: staged paths contain client data or machine-local secrets:" >&2
+  echo "$bad" | sed 's/^/  /' >&2
+  echo "These paths are never committed (AGENTS.md: Data sensitivity). Unstage them." >&2
+  exit 1
+fi
+exit 0

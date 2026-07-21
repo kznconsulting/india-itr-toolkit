@@ -1,0 +1,98 @@
+{
+  "_comment": "FICTITIOUS smoke-test data for scripts/build-statement.py. Not a real person. Used by scripts/doctor.sh.",
+  "assessmentYear": "2026-27",
+  "priorYearLabel": "2025-26",
+  "client": {
+    "name": "DEMO KUMAR SHARMA",
+    "displayName": "Demo Sharma",
+    "pan": "AAAPZ8888Z",
+    "aadhaar": "0000 0000 0000",
+    "dob": "15/06/1980",
+    "address": "1 Sample Street, Bengaluru - 560001",
+    "status": "01-Individual",
+    "ward": "WARD 1 (1) (1), BENGALURU",
+    "residentialStatus": "Resident",
+    "gender": "M",
+    "itrForm": "ITR-3",
+    "returnStatus": "Original Return",
+    "regime": "new",
+    "regimeNotes": ["Under New Tax Regime (default)"],
+    "banks": [
+      { "label": "Sample Bank", "ifsc": "TEST0000001", "account": "000000000000", "useForRefund": true }
+    ]
+  },
+  "salary": { "note": "NIL", "priorNote": "NIL" },
+  "houseProperty": { "note": "NIL", "prior": 0, "lines": [] },
+  "business": {
+    "items": [
+      {
+        "payer": "SAMPLE CONSULTING PRIVATE LIMITED",
+        "tan": "MUMS00000A",
+        "gross": 600000,
+        "tds": 60000,
+        "presumptiveRate": 0.5,
+        "in26AS": true,
+        "inAIS": true,
+        "prior": { "gross": 550000, "tds": 55000, "presumptive": 275000 },
+        "notes": ["(Consultancy income)"],
+        "meta": {}
+      }
+    ]
+  },
+  "interest": {
+    "savings": [
+      { "bank": "Sample Bank", "account": "000000000000", "ifsc": "TEST0000001", "amount": 5000, "prior": 4000 }
+    ],
+    "savingsPriorTotal": 4000,
+    "deposits": [
+      { "bank": "Sample Bank - FD", "account": "000000000001", "tan": "MUMS00001B", "amount": 80000 }
+    ],
+    "depositsTds": 8000,
+    "depositsPrior": { "gross": 75000, "tds": 7500 },
+    "priorTotal": 79000,
+    "priorTds": 7500
+  },
+  "dividends": {
+    "items": [
+      { "name": "Sample Industries Ltd", "gross": 40000, "tds": 4000, "tan": "MUMS00002C", "priorGross": 35000, "priorTds": 3500, "periods": { "L": 40000 } },
+      { "name": "Sample MF (via CAMS)", "gross": 10000, "priorGross": 9000, "periods": { "O": 10000 } }
+    ],
+    "prior": { "total": 44000, "tds": 3500 },
+    "notes": ["(Fictitious data for smoke testing)"]
+  },
+  "capitalGains": {
+    "longTerm": [
+      { "name": "Sample Equity Fund - Growth", "isin": "INF000000AA1", "saleDate": "12/09/2025", "saleValue": 250000, "cost": 110000, "source": "AIS" },
+      { "name": "Sample Industries Ltd", "isin": "INE000000AA2", "saleDate": "05/01/2026", "saleValue": 150000, "cost": 70000, "source": "AIS" }
+    ],
+    "shortTerm": [
+      { "name": "Sample Nifty ETF", "isin": "INF000000AA3", "saleDate": "20/11/2025", "saleValue": 60000, "cost": 40000, "source": "AIS" }
+    ],
+    "shortTermNote": "",
+    "lossBroughtForward": 0,
+    "lossHistory": [],
+    "notes": ["(Fictitious lots: LTCG 2,20,000 above the 1,25,000 exemption; STCG u/s 111A 20,000)"]
+  },
+  "deductions": {
+    "oldRegime": [
+      { "section": "u/s 80C", "desc": "PPF", "amount": 100000 },
+      { "section": "u/s 80TTA", "desc": "Savings interest", "amount": 10000 }
+    ],
+    "newRegime": [],
+    "note": "New regime: Chapter VI-A not available."
+  },
+  "taxesPaid": { "advance": 0, "selfAssessment": 0 },
+  "exemptIncome": [],
+  "priorYear": { "gti": 393000, "tds": 66000 },
+  "refundBankNote": "Refund to: Sample Bank A/c 000000000000",
+  "reconciliation": {
+    "tisDividend": 50000,
+    "tisDividendTds": 4000,
+    "tisSavingsInterest": 5000,
+    "tisDepositInterest": 80000,
+    "tisBusinessReceipts": 600000,
+    "tisSecuritiesSale": 460000,
+    "totalTds": 72000
+  },
+  "notes": ["Fictitious smoke-test statement."]
+}

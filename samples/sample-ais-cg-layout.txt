@@ -1,0 +1,18 @@
+Annual Information Statement (AIS) - FICTITIOUS SAMPLE for scripts/parse-ais-cg.py
+AAAPZ8888Z  DEMO KUMAR SHARMA  2025-26
+SFT-17 Sale of securities and units of mutual fund
+SR. NO.  DATE OF SALE/  SECURITY  DEBIT TYPE  CREDIT TYPE  SHORT/LONG TERM  QUANTITY  PRICE PER UNIT  SALE  PURCHASE COST
+NO.  TRANSFER
+VALUE
+   1   20/11/2025   SAMPLE NIFTY ETF                        Listed Equity   Market   Market   Short      40.00      1,500.00      60,000      40,000    0    0    0   Active
+       (INF000000AA3) Unit
+   2   12/09/2025   SAMPLE EQUITY FUND - GROWTH             Equity Oriented Mutual Fund   Market   Market   Long     100.00      2,500.00     250,000     110,000    0    0    0   Active
+       (INF000000AA1) Unit
+   3   05/01/2026   SAMPLE INDUSTRIES LIMITED EQ            Listed Equity   Market   Market   Long      50.00      3,000.00     150,000      70,000    0    0    0   Active
+       NEW FV RS. 2/-(INE000000AA2) Share
+Page 1 of 2
+Download ID: AIS0000000  Generation Date: 15/06/2026  IP Address: 0.0.0.0
+   4   14/02/2026   SAMPLE TRANSFER-IN LIMITED              Listed Equity   Market   Off      Long      10.00      900.00      9,000        0        0    0    0   Active
+       (INE000000AA4) Share
+   5   14/02/2026   SAMPLE BOND SERIES IX                   Listed Debenture   Market   Market   Long       5.00      1,000.00      5,000       4,000    0    0    0   Active
+       (INE000000AA5) Others

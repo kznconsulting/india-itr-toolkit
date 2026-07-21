@@ -1,0 +1,17 @@
+{
+  "_generated": "by build-statement.py after a verified build - consumed by next year's bun run extract; do not hand-edit",
+  "assessmentYear": "2026-27",
+  "regime": "new",
+  "gti": 675000,
+  "totalIncome": {
+    "old": 565000,
+    "new": 675000
+  },
+  "tds": 72000,
+  "capitalLoss": {
+    "broughtForward": 0,
+    "setOffThisYear": 0,
+    "carryForwardNext": 0,
+    "lossHistoryAppend": null
+  }
+}

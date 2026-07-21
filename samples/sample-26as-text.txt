@@ -1,0 +1,23 @@
+^Annual Tax Statement^
+File Creation Date^Permanent Account Number (PAN)^Current Status of PAN^Financial Year^Assessment Year^Name of Assessee^Address Line 1^Address Line 2^Address Line 3^Address Line 4^Address Line 5^Pin Code
+01-Jul-2026^ABCPZ1234K^ACTIVE AND OPERATIVE^2025-2026^2026-2027^TEST TAXPAYER^1 TEST STREET^^^^BENGALURU^560001
+PART-I - Details of Tax Deducted at Source
+Sr. No.^Name of Deductor^TAN of Deductor^^^^^Total Amount Paid / Credited(Rs.)^Total Tax Deducted(Rs.)^Total TDS Deposited(Rs.)
+1^ACME STEEL LIMITED^BLRA00001A^^^^^10000.00^1000.00^1000.00
+^Sr. No.^Section^Transaction Date^Status of Booking^Date of Booking^Remarks^Amount Paid / Credited(Rs.)^Tax Deducted(Rs.)^TDS Deposited(Rs.)
+^1^194^15-May-2025^F^10-Jun-2025^-^12000.00^1200.00^1200.00
+^2^194^20-Aug-2025^F^12-Sep-2025^G^-2000.00^-200.00^-200.00
+
+2^GLOBAL BANK LIMITED^MUMB00002B^^^^^50000.00^5000.00^5000.00
+^Sr. No.^Section^Transaction Date^Status of Booking^Date of Booking^Remarks^Amount Paid / Credited(Rs.)^Tax Deducted(Rs.)^TDS Deposited(Rs.)
+^1^194A^30-Sep-2025^F^15-Oct-2025^-^50000.00^5000.00^5000.00
+
+PART-II - Details of Tax Deducted at Source for 15G / 15H
+Sr. No.^Name of Deductor^TAN of Deductor^^^^^Total Amount Paid / Credited(Rs.)^Total Tax Deducted(Rs.)
+^^^*********** No Transactions Present ***********^^
+PART-VII - Details of Paid Refund
+Sr. No.^Assessment Year^Mode^Refund Issued^Nature of Refund^Amount of Refund^Interest^Date of Payment^Remarks
+^^^*********** No Transactions Present ***********^^
+PART-X - TDS/TCS Defaults
+Sr. No.^Financial Year^Short Payment^Short Deduction/Collection^Interest on TDS/TCS^Late Filing Fee^Interest u/s 220(2)^Total Default
+^^^*********** No Transactions Present ***********^^

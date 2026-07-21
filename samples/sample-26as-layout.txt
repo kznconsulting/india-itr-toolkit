@@ -1,0 +1,60 @@
+                                                                                                                                                                    Data updated till 01-Jul-2026
+
+
+
+
+                                                                           Annual Tax Statement
+
+  Permanent Account Number (PAN)           ABCPX1234Z           Current Status of PAN     Active and Operative      Financial Year      2025-26           Assessment Year        2026-27
+             Name of Assessee              TEST TAXPAYER
+            Address of Assessee            1, TEST LANE, TESTVILLE,
+                                           MAHARASHTRA, 400001
+
+                                                                                                                                                                      (All amount values are in INR)
+PART-I - Details of Tax Deducted at Source
+
+  Sr. No.                                    Name of Deductor                                   TAN of Deductor       Total Amount Paid/         Total Tax Deducted #            Total TDS
+                                                                                                                            Credited                                             Deposited
+    1                                  ALPHA INDUSTRIES LIMITED                                  MUMA11111A                      10000.00                       1000.00                  1000.00
+  Sr. No.    Section 1            Transaction Date   Status of Booking*      Date of Booking       Remarks**            Amount Paid /            Tax Deducted ##              TDS Deposited
+                                                                                                                          Credited
+    1              194              15-Jan-2026                 F             09-May-2026                -                        4000.00                        400.00                   400.00
+    2              194              10-Jun-2025                 F             22-Oct-2025                -                        6000.00                        600.00                   600.00
+  Sr. No.                                    Name of Deductor                                   TAN of Deductor       Total Amount Paid/         Total Tax Deducted #            Total TDS
+                                                                                                                            Credited                                             Deposited
+    2                                    EPSILON BANK LIMITED                                     MUME22222E                     20000.00                       2000.00                  2000.00
+  Sr. No.    Section 1            Transaction Date   Status of Booking*      Date of Booking       Remarks**            Amount Paid /            Tax Deducted ##              TDS Deposited
+                                                                                                                          Credited
+    1             194A              01-Jan-2026                 F             02-Jun-2026                -                       15000.00                       1500.00                  1500.00
+    2             194A              01-Jan-2026                 F             02-Jun-2026               G                       -5000.00                       -500.00                  -500.00
+    3             194A              01-Oct-2025                 F             14-Feb-2026                -                       10000.00                       1000.00                  1000.00
+
+PART-II-Details of Tax Deducted at Source for 15G / 15H
+
+  Sr. No.                               Name of Deductor                                TAN of Deductor          Total Amount Paid /           Total Tax Deducted #              Total TDS
+                                                                                                                               Credited                                                     Deposited
+
+
+ Sr. No.   Section 1                      Transaction Date            Date of Booking             Remarks**            Amount Paid/Credited            Tax Deducted ##                   TDS Deposited
+No Transactions Present
+
+PART-VI-Details of Tax Collected at Source
+
+  Sr. No.                                      Name of Collector                                         TAN of Collector      Total Amount Paid/        Total Tax Collected +              Total TCS
+                                                                                                                                     Debited                                                Deposited
+
+
+  Sr. No.   Section 1           Transaction Date         Status of Booking*       Date of Booking          Remarks**             Amount Paid/            Tax Collected ++                TCS Deposited
+                                                                                                                                   Debited
+No Transactions Present
+
+PART-VII- Details of Paid Refund (For which source is CPC TDS. For other details refer AIS at E-filing portal)
+
+  Sr.       Assessment Year                Mode           Refund Issued       Nature of Refund           Amount of Refund                 Interest            Date of Payment                Remarks
+  No.
+No Transactions Present
+
+*Notes:
+
+1.Defaults related to processing of statements, do not include demand raised by the respective Assessing Officers.
+2.For more details please log on to TRACES as taxpayer.

@@ -1,0 +1,21 @@
+node_modules/
+.env*
+__pycache__/
+
+# Machine-local agent config; on ported machines it holds the OpenRouter API key. Never commit.
+.claude/settings.local.json
+
+# Machine role marker: "operator" enables proactive commit/push (AGENTS.md). Absent = maintainer.
+.machine-role
+
+# Client data contains PII (PAN, Aadhaar, bank accounts). Never commit it.
+clients/*
+!clients/.gitkeep
+
+# Ad-hoc report output for files processed outside clients/ (e.g. samples)
+reports/
+
+# Generated statements from sample data (regenerable)
+samples/*.xlsx
+
+.DS_Store
