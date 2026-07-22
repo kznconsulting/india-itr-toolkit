@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generic ITR computation-statement builder (works for any client).
 
-Reads a per-client, per-year statement-data.json (template: templates/
-statement-data-template.json; how to fill it from AIS/TIS/26AS PDFs:
+Reads a per-client, per-year statement-data.json (drafted by `bun run
+extract` from the portal documents; gap resolution runbook:
 docs/extract-from-pdfs.md) and writes the operator's statement Excel:
 an Income sheet plus Dividends, Interest income, Capital Gains, and a
 LT-capital-loss roll-forward sheet, mirroring the practice's house format.
@@ -324,7 +324,12 @@ def build(data, out_path, data_dir=None):
         ("house property TDS vs 26AS", hp_tds_total or None, rec.get("tisRentTds")),
     ]
     for label, got, want in checks:
-        if want is not None and got != want:
+        if want is None:
+            continue
+        # 0.5-rupee tolerance, matching lib/aisjson.ts's own reconciliation guard:
+        # itemized AIS lots carry paisa, TIS aggregate targets are rounded rupees
+        # (GAP-017). A real error is always >= Rs. 1; never widen this.
+        if got is None or abs(got - want) > 0.5:
             die(f"reconciliation failed - {label}: data sums to {got}, target says {want}. "
                 "Fix the DATA (re-read the source figure), never the check - and never invent a "
                 "number to make it pass. If the same check fails twice for the same reason, stop "
@@ -662,6 +667,13 @@ def build(data, out_path, data_dir=None):
         expected[(ws.title, f"E{r_stcg}")] = sum(i["saleValue"] for i in st_items)
         expected[(ws.title, f"F{r_stcg}")] = sum(i["cost"] for i in st_items)
         expected[(ws.title, f"H{r_stcg}")] = stcg_gross
+    # 234C accrual breakup: every period cell anchored (zero included, so a
+    # mis-bucketed formula cannot hide in an unchecked column)
+    if cg_cells:
+        for key, items in [("ltPeriods", lt_items), ("stPeriods", st_items)]:
+            if cg_cells.get(key):
+                for c, want in _period_sums(items, ay).items():
+                    expected[(cg_cells["sheet"], cg_cells[key][c])] = want
     if r_sal:
         expected[(ws.title, f"H{r_sal}")] = salary_gross
         expected[(ws.title, f"I{r_sal}")] = salary_tds
@@ -728,8 +740,7 @@ def build_dividends_sheet(wb, data, ay, prior):
            "L": f"Period of receipt (AY {ay})"}, bold=True)
     s.row({"D": "Gross (Rs.)", "E": "TDS (Rs.)", "F": "Src", "G": "TAN", "H": "Gross",
            "J": "TDS", "Q": "26AS", "R": "AIS"}, bold=True)
-    s.row({"L": "up to 15/6", "M": "16/6 to 15/9", "N": "16/9 to 15/12", "O": "16/12 to 15/3",
-           "P": "16/3 to 31/3"}, bold=True)
+    s.row(dict(PERIOD_LABELS), bold=True)
     first = s.r
     for d in dv["items"]:
         cells = {"A": d["name"]}
@@ -825,6 +836,12 @@ def build_interest_sheet(wb, data, ay, prior):
             "other": f"F{r_other}" if r_other else None}
 
 
+# s.234C advance-tax periods, keyed by sheet column - same L..P convention as the
+# Dividends sheet and generate-itr.py's date_range() DateRange mapping.
+PERIOD_LABELS = {"L": "up to 15/6", "M": "16/6 to 15/9", "N": "16/9 to 15/12",
+                 "O": "16/12 to 15/3", "P": "16/3 to 31/3"}
+
+
 def _sale_date_key(item):
     d = item.get("saleDate", "")
     try:
@@ -834,31 +851,76 @@ def _sale_date_key(item):
         return (0, 0, 0)
 
 
+def _period_col(item, ay):
+    """s.234C period column (L..P) for an item's saleDate, validated against the
+    AY's financial year. A capital-gains lot without a parseable in-FY sale date
+    is bad input data, not a toolkit gap - fix the data file."""
+    d = item.get("saleDate", "")
+    try:
+        dd, mm, yyyy = (int(x) for x in d.split("/"))
+    except ValueError:
+        die(f"capital-gains item '{item.get('name')}' saleDate '{d}' is not dd/mm/yyyy - "
+            "needed for the 5-period (234C) accrual breakup; fix the data file")
+    fy_start = int(ay[:4]) - 1
+    if not ((yyyy == fy_start and mm >= 4) or (yyyy == fy_start + 1 and mm <= 3)):
+        die(f"capital-gains item '{item.get('name')}' saleDate {d} falls outside "
+            f"FY {fy_start}-{str(fy_start + 1)[2:]} (AY {ay}) - fix the data file")
+    if mm <= 3:  # Jan-Mar wrap: decide before the Apr-Dec ladder
+        return "O" if (mm < 3 or dd <= 15) else "P"
+    if (mm, dd) <= (6, 15):
+        return "L"
+    if (mm, dd) <= (9, 15):
+        return "M"
+    if (mm, dd) <= (12, 15):
+        return "N"
+    return "O"
+
+
+def _period_sums(items, ay):
+    """Python-side bucket totals used as verification anchors for the sheet's SUMs."""
+    sums = {c: 0 for c in PERIOD_LABELS}
+    for i in items:
+        sums[_period_col(i, ay)] += i["saleValue"] - i["cost"]
+    return sums
+
+
 def build_capital_gains_sheet(wb, data, ay, setoff):
     cg = data["capitalGains"]
     ws = wb.create_sheet("Capital Gains")
     s = Sheet(ws)
-    s.widths({"A": 40, "B": 15, "C": 12, "D": 12, "F": 16, "H": 12, "J": 12})
+    s.widths({"A": 40, "B": 15, "C": 12, "D": 12, "F": 16, "H": 12, "J": 12,
+              "L": 11, "M": 11, "N": 11, "O": 11, "P": 11})
     s.put("A2", data["client"]["displayName"], NAME_FONT)
     s.put("A4", f"AY {ay}")
     s.r = 6
     s.row({"A": "Capital Gains", "B": "ISIN", "C": "Date of Sale", "D": "Sale Value",
-           "F": "Cost of Acquisition", "H": "LTCG", "J": "Source"}, bold=True)
+           "F": "Cost of Acquisition", "H": "LTCG", "J": "Source",
+           "L": f"Period of accrual (AY {ay})"}, bold=True)
+    s.row(dict(PERIOD_LABELS), bold=True)
+
+    def _item_rows(items):
+        for i in sorted(items, key=_sale_date_key):
+            source = i.get("source", "")
+            if i.get("costUnconfirmed"):
+                source = (source + " - UNCONFIRMED COST" if source else "UNCONFIRMED COST")
+            r = s.row({"A": i["name"], "B": i.get("isin", ""), "C": i.get("saleDate", ""),
+                       "D": i["saleValue"], "F": i["cost"], "J": source})
+            s.put(f"H{r}", f"=D{r}-F{r}", BASE, ACC)
+            s.put(f"{_period_col(i, ay)}{r}", f"=H{r}", BASE, ACC)
+            if i.get("costUnconfirmed"):
+                s.row({"A": "  cost per AIS depository data - confirm against broker contract note"}, note=True)
+
+    def _totals_row(label, first, last):
+        return s.row({"A": label,
+                      **{c: f"=SUM({c}{first}:{c}{last})" for c in "DFH" + "".join(PERIOD_LABELS)}},
+                     bold=True)
+
     s.row({"A": "Long Term (post 23/07/2024)"}, bold=True)
     first = s.r
-    for i in sorted(cg.get("longTerm", []), key=_sale_date_key):
-        source = i.get("source", "")
-        if i.get("costUnconfirmed"):
-            source = (source + " - UNCONFIRMED COST" if source else "UNCONFIRMED COST")
-        r = s.row({"A": i["name"], "B": i.get("isin", ""), "C": i.get("saleDate", ""),
-                   "D": i["saleValue"], "F": i["cost"], "J": source})
-        s.put(f"H{r}", f"=D{r}-F{r}", BASE, ACC)
-        if i.get("costUnconfirmed"):
-            s.row({"A": "  cost per AIS depository data - confirm against broker contract note"}, note=True)
+    _item_rows(cg.get("longTerm", []))
     last = s.r - 1
     if last >= first:
-        r_gross = s.row({"A": "Total LTCG", "D": f"=SUM(D{first}:D{last})", "F": f"=SUM(F{first}:F{last})",
-                         "H": f"=SUM(H{first}:H{last})"}, bold=True)
+        r_gross = _totals_row("Total LTCG", first, last)
     else:
         r_gross = s.row({"A": "Total LTCG", "D": 0, "F": 0, "H": 0}, bold=True)
     s.skip()
@@ -871,30 +933,23 @@ def build_capital_gains_sheet(wb, data, ay, setoff):
     if st_items:
         s.row({"A": "Short Term (post 23/07/2024) - taxable u/s 111A"}, bold=True)
         st_first = s.r
-        for i in sorted(st_items, key=_sale_date_key):
-            source = i.get("source", "")
-            if i.get("costUnconfirmed"):
-                source = (source + " - UNCONFIRMED COST" if source else "UNCONFIRMED COST")
-            r = s.row({"A": i["name"], "B": i.get("isin", ""), "C": i.get("saleDate", ""),
-                       "D": i["saleValue"], "F": i["cost"], "J": source})
-            s.put(f"H{r}", f"=D{r}-F{r}", BASE, ACC)
-            if i.get("costUnconfirmed"):
-                s.row({"A": "  cost per AIS depository data - confirm against broker contract note"}, note=True)
+        _item_rows(st_items)
         st_last = s.r - 1
-        r_stgross = s.row({"A": "Total STCG (u/s 111A)", "D": f"=SUM(D{st_first}:D{st_last})",
-                           "F": f"=SUM(F{st_first}:F{st_last})", "H": f"=SUM(H{st_first}:H{st_last})"},
-                          bold=True)
+        r_stgross = _totals_row("Total STCG (u/s 111A)", st_first, st_last)
         s.skip()
     else:
         s.row({"A": f"Short Term: {cg.get('shortTermNote', 'NIL')}"})
 
     for n in cg.get("notes", []):
         s.row({"A": n}, note=True)
+    lt_items = cg.get("longTerm", [])
     return {"sheet": ws.title, "gross": f"H{r_gross}", "sale": f"D{r_gross}",
             "cost": f"F{r_gross}", "setoff": f"H{r_setoff}", "net": f"H{r_netr}",
             "stcgGross": f"H{r_stgross}" if r_stgross else None,
             "stcgSale": f"D{r_stgross}" if r_stgross else None,
-            "stcgCost": f"F{r_stgross}" if r_stgross else None}
+            "stcgCost": f"F{r_stgross}" if r_stgross else None,
+            "ltPeriods": {c: f"{c}{r_gross}" for c in PERIOD_LABELS} if lt_items else None,
+            "stPeriods": {c: f"{c}{r_stgross}" for c in PERIOD_LABELS} if r_stgross else None}
 
 
 def build_loss_sheet(wb, data, ay, setoff):

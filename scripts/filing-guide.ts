@@ -15,7 +15,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { ageBandFromDob, computeTotalTax, getRules } from "./lib/tax";
+import { ageBandFromDob, computeTotalTax, getRules, PERIOD_LABELS, salePeriodColumn } from "./lib/tax";
 import type { ResidentialStatus } from "./lib/tax";
 
 const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
@@ -190,9 +190,6 @@ const expectedTax = comp.grossTaxLiability;
 const refund = totalPaid - expectedTax;
 
 // dividend quarterly breakup (Schedule OS item for 234C)
-const PERIODS: Record<string, string> = {
-  L: "up to 15/6", M: "16/6 - 15/9", N: "16/9 - 15/12", O: "16/12 - 15/3", P: "16/3 - 31/3",
-};
 const perTotals: Record<string, number> = { L: 0, M: 0, N: 0, O: 0, P: 0 };
 for (const d of divItems) for (const [c, v] of Object.entries(d.periods ?? {})) perTotals[c] += v as number;
 const allocated = Object.values(perTotals).reduce((a, b) => a + b, 0);
@@ -294,6 +291,28 @@ if (ltItems.length || lossBf || stItems.length) {
   if (comp.basicExemptionAdjustment > 0) {
     check(`Unexhausted basic exemption absorbs **${inr(comp.basicExemptionAdjustment)}** of the gains (resident-only adjustment - the portal applies it automatically; verify it did)`);
   }
+  // "Information about accrual/receipt of capital gain" table (asked for 234C):
+  // gains bucketed by period of sale, gross (before BFLA - the portal derives the net)
+  const cgPeriodTotals = (items: any[]) => {
+    const t: Record<string, number> = { L: 0, M: 0, N: 0, O: 0, P: 0 };
+    try {
+      for (const i of items) t[salePeriodColumn(String(i.saleDate ?? ""), ay)] += gainOf(i);
+    } catch (e) {
+      die(`capital-gains item without a usable sale date: ${(e as Error).message} - fix the data file`);
+    }
+    return t;
+  };
+  for (const [label, items, total] of [
+    [`STCG u/s 111A`, stItems, stcgGross],
+    [`LTCG u/s 112A`, ltItems, ltcg],
+  ] as [string, any[], number][]) {
+    if (!items.length || total <= 0) continue;
+    check(`Accrual/receipt of capital gain table - ${label} **${inr(total)}** by period of sale (gross, before any set-off):`);
+    const t = cgPeriodTotals(items);
+    for (const [c, lab] of Object.entries(PERIOD_LABELS)) {
+      if (t[c]) push(`    - ${lab}: **${inr(t[c])}**`);
+    }
+  }
   push();
 }
 
@@ -302,7 +321,7 @@ push();
 if (divTotal) {
   check(`Dividend income (gross): **${inr(divTotal)}**`);
   push(`  Quarterly breakup (asked for 234C):`);
-  for (const [c, label] of Object.entries(PERIODS)) {
+  for (const [c, label] of Object.entries(PERIOD_LABELS)) {
     if (perTotals[c]) push(`    - ${label}: **${inr(perTotals[c])}**`);
   }
   if (unallocated > 0) {

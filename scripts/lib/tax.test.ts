@@ -4,6 +4,7 @@ import {
   computeRefundInterest244A,
   computeTax,
   computeTotalTax,
+  salePeriodColumn,
 } from "./tax";
 
 const t = (o: Parameters<typeof computeTax>[0]) => computeTax(o)!;
@@ -228,4 +229,30 @@ test("age band uses FY end (Mar 31 of the AY's first year)", () => {
   expect(ageBandFromDob("1966-03-31", "2026-27")).toBe("s60to79"); // turns 60 on 2026-03-31
   expect(ageBandFromDob("1966-04-01", "2026-27")).toBe("lt60");
   expect(ageBandFromDob("1988-04-15", "2026-27")).toBe("lt60");
+});
+
+test("salePeriodColumn: s.234C boundaries across the FY", () => {
+  expect(salePeriodColumn("01/04/2025", "2026-27")).toBe("L");
+  expect(salePeriodColumn("15/06/2025", "2026-27")).toBe("L");
+  expect(salePeriodColumn("16/06/2025", "2026-27")).toBe("M");
+  expect(salePeriodColumn("15/09/2025", "2026-27")).toBe("M");
+  expect(salePeriodColumn("16/09/2025", "2026-27")).toBe("N");
+  expect(salePeriodColumn("15/12/2025", "2026-27")).toBe("N");
+  expect(salePeriodColumn("16/12/2025", "2026-27")).toBe("O");
+  expect(salePeriodColumn("15/03/2026", "2026-27")).toBe("O");
+  expect(salePeriodColumn("16/03/2026", "2026-27")).toBe("P");
+  expect(salePeriodColumn("31/03/2026", "2026-27")).toBe("P");
+});
+
+test("salePeriodColumn: Jan/Feb sales land in 16/12-15/3, not the April ladder", () => {
+  // regression: naive (month, day) tuple ladders bucket 10/01 into "up to 15/6"
+  expect(salePeriodColumn("10/01/2026", "2026-27")).toBe("O");
+  expect(salePeriodColumn("28/02/2026", "2026-27")).toBe("O");
+});
+
+test("salePeriodColumn: rejects out-of-FY and unparseable dates", () => {
+  expect(() => salePeriodColumn("31/03/2025", "2026-27")).toThrow(/outside FY/);
+  expect(() => salePeriodColumn("01/04/2026", "2026-27")).toThrow(/outside FY/);
+  expect(() => salePeriodColumn("", "2026-27")).toThrow(/not DD\/MM\/YYYY/);
+  expect(() => salePeriodColumn("2025-09-12", "2026-27")).toThrow(/not DD\/MM\/YYYY/);
 });

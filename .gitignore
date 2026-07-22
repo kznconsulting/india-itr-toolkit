@@ -12,6 +12,9 @@ __pycache__/
 clients/*
 !clients/.gitkeep
 
+# Maintainer-local scan terms for scripts/release-public.sh; the terms ARE the PII.
+.release-scan-terms
+
 # Ad-hoc report output for files processed outside clients/ (e.g. samples)
 reports/
 

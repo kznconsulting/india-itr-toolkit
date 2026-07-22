@@ -81,6 +81,69 @@ Template:
 
 ## IMPLEMENTED - awaiting operator verification (newest first)
 
+### GAP-017 build-statement.py reconciliation checks use strict equality, no paisa tolerance
+- Shape: 2026-07-22, operator; NRI client, ITR-2, 58 AIS-JSON capital-gains lots
+  (short-term + long-term) reconciled against `reconciliation.tisSecuritiesSale`.
+- Symptom: `build-statement.py`'s reconciliation loop (`if want is not None and got !=
+  want`) aborts: "reconciliation failed - securities sale vs TIS: data sums to
+  12526295.9, target says 12526296." The two figures differ by exactly Rs. 0.10 - a
+  paisa-rounding gap between the sum of itemized AIS lots (each already at full paisa
+  precision, confirmed via `Decimal` - no floating-point artifact) and the TIS aggregate
+  figure. There is no more-precise source figure to fetch; re-running extract cannot
+  change this. `scripts/lib/aisjson.ts`'s own CAPITAL-GAINS MISMATCH guard already
+  tolerates up to Rs. 0.50 on this exact same comparison (line ~526,
+  `Math.abs(lotSaleTotal - reconciliation.tisSecuritiesSale) > 0.5`) - the extraction
+  step accepted this data as reconciled; the statement builder's stricter check then
+  rejects it.
+- Spec: give `build-statement.py`'s reconciliation `checks` loop (around line 309-331)
+  the same tolerance the extractor already uses for this check (e.g. `abs(got - want) >
+  0.5` instead of `got != want`) - at minimum for "securities sale vs TIS"; consider
+  whether other rupee-precision reconciliation lines in the same loop want the same
+  treatment for consistency, though those are typically int rupee sums with no paisa
+  component.
+- Validation figures: 58 lots (53 ST + 5 LT) summing to exactly 1,25,26,295.90; TIS
+  target 1,25,26,296 (diff Rs. 0.10).
+- Trail: 2026-07-22 reported; client parked pending this fix -> 2026-07-22 implemented
+  (uniform 0.5-rupee tolerance across the checks loop - an integer-rupee mismatch is
+  always >= 1, so tolerance only forgives sub-rupee drift; validated on a sample
+  variant: lots summing 4,59,999.90 vs target 4,60,000 builds green with all anchors,
+  a 2-rupee diff still dies) -> AWAITING operator re-run of the parked client.
+
+### GAP-016 STCG/LTCG 5-period (s.234C) accrual breakup on the Capital Gains sheet
+- Shape: 2026-07-22, operator (NRI client, ITR-2 statement+guide path, equity CG
+  lots across most of the 5 periods; same request also relayed to the maintainer
+  off-ledger); the client's prior-year hand-built statements carry the breakup, the
+  generated sheet did not.
+- Symptom: `build_dividends_sheet()` already renders the 5 period columns L..P from
+  each item's `periods` dict; `build_capital_gains_sheet()` had no period grouping
+  or subtotals at all - the operator needs STCG and LTCG split across the 5
+  advance-tax periods for the portal's "accrual/receipt of capital gain" table and
+  the client-facing statement.
+- Spec: bucket each lot by `saleDate` (every lot carries one - no name-matching
+  dependency) into L "up to 15/6" / M "16/6 to 15/9" / N "16/9 to 15/12" /
+  O "16/12 to 15/3" / P "16/3 to 31/3", validated against the AY's FY (unparseable
+  or out-of-FY saleDate = data error, hard stop); per-section period totals on the
+  sheet, all 10 cells anchored in the build's self-verification (zeros included so
+  a mis-bucketed column cannot hide); same breakup in the filing guide's Schedule
+  CG section (gross, before BFLA set-off). Also fixes generate-itr.py's inline LT
+  accrual bucketing, which sent Jan/Feb sales to "up to 15/6" (a naive (month, day)
+  tuple ladder never reaches the Jan-Mar wrap). LAYOUT NOTE: the client's own
+  prior-year hand format was ROW-grouped period subtotal blocks with explicit
+  pre-/post-23/07/2024 sections; implemented COLUMN-based L..P instead (house
+  Dividends convention - same figures, one layout across sheets). If the accountant
+  needs the prior row-grouped layout for the client-facing copy, flag it at
+  verification and it becomes a follow-up entry.
+- Validation figures: boundary tests 15/6->L, 16/6->M, 15/9->M, 16/9->N, 15/12->N,
+  16/12->O, 15/3->O, 16/3->P, 31/3->P, and the regression 10/01->O; sample statement
+  anchors LT 1,40,000 (16/6 to 15/9) + 80,000 (16/12 to 15/3), ST 20,000
+  (16/9 to 15/12), 31 anchors green. Operator: verify the real client's period
+  totals against AIS lot dates (lots span at least 3 periods).
+- Trail: 2026-07-22 reported (operator, ledger + off-ledger relay) -> 2026-07-22
+  implemented (`salePeriodColumn` + `PERIOD_LABELS` in lib/tax.ts with tests; CG
+  sheet columns L..P with anchored totals in build-statement.py; guide accrual
+  section; generate-itr.py Jan-Mar fix) -> AWAITING operator rebuild of the
+  client's statement.
+
 ### GAP-015 AIS-JSON dividend line items carry no name
 - Shape: 2026-07-21, operator; NRI client, 86 AIS-JSON dividend line items (TDS-194 and
   SFT-015 info codes both affected).

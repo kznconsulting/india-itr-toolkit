@@ -75,7 +75,7 @@ bun run extract    -> scripts/extract-data.ts (orchestrator; AIS-JSON-primary so
 - 26AS reversal rows (remark `G`) net inside each deductor's header total; AIS marks superseded rows `Inactive` (count only `Active`); TIS deduplicates SFT-vs-TDS double listings in "Processed by System" - the parsers rely on these invariants and flag when sums disagree.
 - **AIS-JSON is encrypted** (lib/aisjson.ts, built 2026-07-21): AES-256-CBC + PBKDF2-HMAC-SHA256 keyed on the taxpayer's PAN+DOB - the AIS Utility's own public scheme. Layout `[32 hex IV][32 hex salt][base64 ciphertext]`; key = `PBKDF2(pan.toLowerCase() + "GQ39%*g" + ddmmyyyy, salt, 1000, 32, sha256)`; AES-256-CBC/PKCS7. The `"GQ39%*g"` middle constant is baked into the utility and can change across versions, so decryption is verified by "does it parse as JSON," never assumed. Decrypted shape: `partA` (identity, FLAT columnData), `header.columnData=["2025-26"]` (FY), `partB.sections` B1 (TDS/TCS), B2 (SFT), B3 (tax paid), B4 (demand/refund - prior-year principal, NOT 244A), B7 (misc). Each info element carries an `l2` aggregate (one row per payer/scrip - a category spans MANY elements, so aggregate across elements) and an `l1` per-transaction detail (with `status` Active/Inactive). Reconciliation dedup = sum-within-code, max-across-codes. The SOS (securities-sale) `l1` carries per-lot cost + ISIN + ST/LT + off-market + grandfathering FMV, so `readCapitalGainsLots`/`groupCapitalGains` build the `capitalGains` rows straight from JSON (parse-cg's shape + grouping; parse-cg is now fallback-only for client-emailed PDFs / historical years). Category classification is imported from tis.ts so AIS and TIS never diverge.
 - Dividend TDS threshold Rs. 10,000 from FY 2025-26 - small dividends legitimately have no TDS row.
-- 234C period columns (statement Excel): `L` <=15/6, `M` 16/6-15/9, `N` 16/9-15/12, `O` 16/12-15/3, `P` 16/3-31/3. Filled deterministically from 26AS s.194 transaction dates; SFT-015-only scrips have no payment date (annual filing date only - never allocate from it).
+- 234C period columns (statement Excel): `L` <=15/6, `M` 16/6-15/9, `N` 16/9-15/12, `O` 16/12-15/3, `P` 16/3-31/3. Dividends: filled deterministically from 26AS s.194 transaction dates; SFT-015-only scrips have no payment date (annual filing date only - never allocate from it). Capital gains (GAP-016): each lot bucketed from its `saleDate` at build time (`_period_col` in build-statement.py, `salePeriodColumn` in lib/tax.ts for the guide; FY-validated, hard stop on bad dates), per-section totals anchored in the build's self-verification.
 
 ## Portal harvester (harvest-portal.ts)
 
@@ -99,6 +99,37 @@ Conventions that keep it from becoming a scratchpad again:
 - **Validation figures are the permanent artifact.** They are what unit tests cite; when an entry reaches VERIFIED it collapses into the table but the figures are never trimmed. Figures only - the ledger's PII policy (no client names/slugs, no identity) is enforced by the human-reviewed commit that publishes an entry.
 - **Cross-reference by id** (`GAP-003 has the validated step order`), never by "the entry below".
 - **Direction - GitHub issues**: once the public repo (kznconsulting/india-itr-toolkit) is live, generalizable OPEN entries get mirrored as labeled public issues (`gap`, `needs-real-data`, `speculative`) by the maintainer, and community requests arrive there. Operator escalation STAYS in this file - it is git-native, works offline, and keeps the figures-only PII gate behind a reviewed commit. The VERIFIED table stays in-repo forever regardless: issues close and get buried; the tests' cited figures must live next to the tests.
+
+## Public release sync (kznconsulting/india-itr-toolkit)
+
+The public repo is a one-way, maintainer-curated export of this one. The `public-release`
+branch holds its entire history: one squashed "Initial public release" commit (the
+fresh-history firewall - the practice repo's history, with its operator authorship and
+old client-name blobs, is never published), then ONE tree-copy commit per release batch.
+Public history is deliberately batch-grained: adopters see features landing, not the
+practice's operational trail. The operator never touches the public repo - escalation
+stays in the gap ledger (see "Direction - GitHub issues" above).
+
+- `scripts/release-public.sh` is the only sync path. Dry-run by default (PII scans +
+  outgoing diff); `--commit -m "<curated message>"` writes the release commit,
+  re-authored to the public identity taken from the branch's own prior commits (so the
+  local machine's git config can never leak), with a `Synced-from: <master sha>` trailer
+  the next run uses to list the batch. It never pushes: publishing is
+  `git push public public-release:master`, a per-release maintainer decision.
+- Scans hard-fail the sync: PAN-shaped strings outside the fictitious fixtures
+  (samples/, schemas/, tests), any tracked file under clients/, and every pattern in
+  `.release-scan-terms` - a GITIGNORED maintainer-local file (one case-insensitive
+  regex per line) covering client names, operator identity, and machine hostnames.
+  The terms themselves are PII, which is why that file must never be committed; keep
+  it current - new client means adding the name parts before the next sync.
+- Ledger validation figures (real filed-return amounts, "client A/B") ship publicly by
+  design: the PII gate is names/identifiers, enforced when entries are written and
+  re-checked here; amounts are what the unit tests cite.
+- The divergence guard refuses to run when public/master has commits missing from
+  public-release (someone merged an external PR). The tree-copy model assumes zero
+  external commits; the first accepted community PR means revisiting the model -
+  cherry-picking into master preserves content but clobbers contributor authorship,
+  so don't do that silently. Never force-push public.
 
 ## Housekeeping
 

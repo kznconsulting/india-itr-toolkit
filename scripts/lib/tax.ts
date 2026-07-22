@@ -461,6 +461,29 @@ export function computeRefundInterest244A(opts: {
   };
 }
 
+// Advance-tax (s.234C) accrual periods, keyed by the statement's period columns
+// L..P - the same convention as the Dividends/Capital Gains sheet columns in
+// build-statement.py and generate-itr.py's date_range() DateRange mapping.
+export const PERIOD_LABELS: Record<string, string> = {
+  L: "up to 15/6", M: "16/6 - 15/9", N: "16/9 - 15/12", O: "16/12 - 15/3", P: "16/3 - 31/3",
+};
+
+// Bucket a sale date (DD/MM/YYYY) into its s.234C period column, validated
+// against the AY's financial year. Throws on unparseable or out-of-FY dates.
+export function salePeriodColumn(saleDate: string, ay: string): "L" | "M" | "N" | "O" | "P" {
+  const m = String(saleDate ?? "").match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) throw new Error(`saleDate "${saleDate}" is not DD/MM/YYYY - needed for the 5-period (234C) accrual breakup`);
+  const [dd, mm, yyyy] = [Number(m[1]), Number(m[2]), Number(m[3])];
+  const fyStart = Number(ay.slice(0, 4)) - 1;
+  const inFy = (yyyy === fyStart && mm >= 4) || (yyyy === fyStart + 1 && mm <= 3);
+  if (!inFy) throw new Error(`saleDate ${saleDate} falls outside FY ${fyStart}-${String(fyStart + 1).slice(2)} (AY ${ay})`);
+  if (mm <= 3) return mm < 3 || dd <= 15 ? "O" : "P"; // Jan-Mar wrap: check before the Apr-Dec ladder
+  if (mm < 6 || (mm === 6 && dd <= 15)) return "L";
+  if (mm < 9 || (mm === 9 && dd <= 15)) return "M";
+  if (mm < 12 || (mm === 12 && dd <= 15)) return "N";
+  return "O";
+}
+
 export function ageAt(dateIso: string, dobIso: string): number {
   const d = new Date(dateIso);
   const b = new Date(dobIso);

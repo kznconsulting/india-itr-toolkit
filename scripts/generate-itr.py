@@ -417,10 +417,11 @@ def main():
     for i in lt:
         dd, mm, _ = i["saleDate"].split("/")
         m, d_ = int(mm), int(dd)
-        col = ("L" if (m, d_) <= (6, 15) else "M" if (m, d_) <= (9, 15) else
-               "N" if (m, d_) <= (12, 15) else "O" if (m, d_) <= (3, 15) or m >= 12 else "P")
-        if m <= 3 and (m, d_) > (3, 15):
-            col = "P"
+        # Jan-Mar wrap decided before the Apr-Dec ladder: a (1, dd) tuple would
+        # otherwise satisfy (m, d) <= (6, 15) and land a January sale in Q1
+        col = (("O" if (m < 3 or d_ <= 15) else "P") if m <= 3 else
+               "L" if (m, d_) <= (6, 15) else "M" if (m, d_) <= (9, 15) else
+               "N" if (m, d_) <= (12, 15) else "O")
         sale_quarters[col] = sale_quarters.get(col, 0) + (i["saleValue"] - i["cost"])
     acc = cg23["AccruOrRecOfCG"]["LongTermUnder12_5Per"]["DateRange"]
     for k, v in date_range(sale_quarters).items():
